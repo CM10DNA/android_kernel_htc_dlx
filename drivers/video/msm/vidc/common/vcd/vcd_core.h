@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
+>>>>>>> 087be57... vidc: Turbo mode for multiple instances
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -147,7 +151,6 @@ struct vcd_dev_ctxt {
 	u32 reqd_perf_lvl;
 	u32 curr_perf_lvl;
 	u32 set_perf_lvl_pending;
-	bool turbo_mode_set;
 };
 
 struct vcd_clnt_status {
