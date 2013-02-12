@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2011 Bosch Sensortec GmbH
  * Copyright (c) 2011 Unixphere
+=======
+/* Copyright (c) 2009-2011, The Linux Foundation. All rights reserved.
+>>>>>>> e833aca... Update copyright to The Linux Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

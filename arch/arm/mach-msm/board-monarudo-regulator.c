@@ -1,5 +1,10 @@
 /*
+<<<<<<< HEAD:arch/arm/mach-msm/board-monarudo-regulator.c
  * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012, LGE Inc.
+>>>>>>> e833aca... Update copyright to The Linux Foundation:arch/arm/mach-msm/lge/mako/board-mako-regulator.c
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and

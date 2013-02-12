@@ -2,6 +2,10 @@
  * Driver for msm7k serial device and console
  *
  * Copyright (C) 2007 Google, Inc.
+<<<<<<< HEAD
+=======
+ * Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> e833aca... Update copyright to The Linux Foundation
  * Author: Robert Love <rlove@google.com>
  * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
  *
