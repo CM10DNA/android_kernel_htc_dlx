@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
+>>>>>>> d30665d... msm: vidc: Fix iommu pagefault in concurrent scenario
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -1870,7 +1874,7 @@ u32 vid_enc_set_recon_buffers(struct video_client_ctx *client_ctx,
 					VIDEO_DOMAIN,
 					VIDEO_MAIN_POOL,
 					SZ_4K,
-					0,
+					control->buffer_size * 2,
 					(unsigned long *)&iova,
 					(unsigned long *)&buffer_size,
 					0, 0);
