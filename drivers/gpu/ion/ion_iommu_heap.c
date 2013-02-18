@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -12,13 +12,14 @@
  */
 #include <linux/err.h>
 #include <linux/io.h>
-#include <linux/ion.h>
+#include <linux/msm_ion.h>
 #include <linux/mm.h>
 #include <linux/scatterlist.h>
 #include <linux/slab.h>
 #include <linux/vmalloc.h>
 #include <linux/iommu.h>
 #include <linux/pfn.h>
+#include <linux/dma-mapping.h>
 #include "ion_priv.h"
 
 #include <asm/mach/map.h>
@@ -36,10 +37,6 @@ struct ion_iommu_priv_data {
 	int nrpages;
 	unsigned long size;
 };
-
-//HTC_START
-atomic_t v = ATOMIC_INIT(0);
-//HTC_END
 
 static int ion_iommu_heap_allocate(struct ion_heap *heap,
 				      struct ion_buffer *buffer,
@@ -79,17 +76,20 @@ static int ion_iommu_heap_allocate(struct ion_heap *heap,
 			goto err2;
 
 		for_each_sg(table->sgl, sg, table->nents, i) {
-			data->pages[i] = alloc_page(GFP_KERNEL | __GFP_ZERO);
+			data->pages[i] = alloc_page(
+				GFP_KERNEL | __GFP_HIGHMEM | __GFP_ZERO);
 			if (!data->pages[i])
 				goto err3;
 
 			sg_set_page(sg, data->pages[i], PAGE_SIZE, 0);
+			sg_dma_address(sg) = sg_phys(sg);
 		}
 
+		if (!ION_IS_CACHED(flags))
+			dma_sync_sg_for_device(NULL, table->sgl, table->nents,
+						DMA_BIDIRECTIONAL);
+
 		buffer->priv_virt = data;
-		//HTC_START
-		atomic_add(data->size, &v);
-		//HTC_END
 		return 0;
 
 	} else {
@@ -126,18 +126,7 @@ static void ion_iommu_heap_free(struct ion_buffer *buffer)
 
 	kfree(data->pages);
 	kfree(data);
-	//HTC_START
-	atomic_sub(data->size, &v);
-	//HTC_END
 }
-
-//HTC_START
-int ion_iommu_heap_dump_size(void)
-{
-	int ret = atomic_read(&v);
-	return ret;
-}
-//HTC_END
 
 void *ion_iommu_heap_map_kernel(struct ion_heap *heap,
 				struct ion_buffer *buffer)
@@ -149,7 +138,7 @@ void *ion_iommu_heap_map_kernel(struct ion_heap *heap,
 		return NULL;
 
 	if (!ION_IS_CACHED(buffer->flags))
-		page_prot = pgprot_noncached(page_prot);
+		page_prot = pgprot_writecombine(page_prot);
 
 	buffer->vaddr = vmap(data->pages, data->nrpages, VM_IOREMAP, page_prot);
 

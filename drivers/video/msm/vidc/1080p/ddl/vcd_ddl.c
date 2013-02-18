@@ -1,4 +1,4 @@
-/* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -88,7 +88,7 @@ u32 ddl_device_init(struct ddl_init_config *ddl_init_config,
 			ddl_context->dram_base_a.align_virtual_addr;
 	}
 	if (!status) {
-		ddl_context->metadata_shared_input.mem_type = DDL_FW_MEM;
+		ddl_context->metadata_shared_input.mem_type = DDL_CMD_MEM;
 		ptr = ddl_pmem_alloc(&ddl_context->metadata_shared_input,
 			DDL_METADATA_TOTAL_INPUTBUFSIZE,
 			DDL_LINEAR_BUFFER_ALIGN_BYTES);
@@ -471,14 +471,6 @@ u32 ddl_encode_frame(u32 *ddl_handle,
 	struct ddl_encoder_data *encoder =
 		&ddl->codec_data.encoder;
 	u32 vcd_status = VCD_S_SUCCESS;
-	struct vcd_transc *transc;
-	/* HTC_START (klockwork issue)*/
-	if (!ddl) {
-		DDL_MSG_ERROR("ddl_enc_frame:Bad_handle");
-		return VCD_ERR_BAD_HANDLE;
-	}
-	/* HTC_END */
-	transc = (struct vcd_transc *)(ddl->client_data);
 	DDL_MSG_LOW("%s: transc = 0x%x", __func__, (u32)ddl->client_data);
 	if (encoder->slice_delivery_info.enable) {
 		return ddl_encode_frame_batch(ddl_handle,
