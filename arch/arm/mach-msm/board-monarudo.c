@@ -45,7 +45,7 @@
 #include <mach/board.h>
 #include <mach/restart.h>
 #include <mach/msm_iomap.h>
-#include <mach/ion.h>
+#include <linux/msm_ion.h>
 #include <linux/usb/msm_hsusb.h>
 #include <mach/htc_usb.h>
 #include <linux/usb/android_composite.h>
