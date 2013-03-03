@@ -16,6 +16,7 @@
 #include <linux/platform_device.h>
 #include <linux/msm_rotator.h>
 #include <linux/ion.h>
+#include <linux/msm_ion.h>
 #include <linux/gpio.h>
 #include <linux/coresight.h>
 #include <asm/clkdev.h>
@@ -32,6 +33,7 @@
 #include <linux/usb/msm_hsusb.h>
 #endif
 #include <mach/msm_sps.h>
+#include <mach/kgsl.h>
 #include <mach/rpm.h>
 #include <mach/msm_bus_board.h>
 #include <mach/msm_memtypes.h>
