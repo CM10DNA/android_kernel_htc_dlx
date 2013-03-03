@@ -1,17 +1,8 @@
 /* Copyright (c) 2008-2009, Code Aurora Forum. All rights reserved.
  *
-<<<<<<< HEAD
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
  * only version 2 as published by the Free Software Foundation.
-=======
- * Copyright (c) 2009-2011 The Linux Foundation. All rights reserved.
- * Copyright (C) 2009 Google, Inc.
- *
- * This software is licensed under the terms of the GNU General Public
- * License version 2, as published by the Free Software Foundation, and
- * may be copied, distributed, and modified under those terms.
->>>>>>> e833aca... Update copyright to The Linux Foundation
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of

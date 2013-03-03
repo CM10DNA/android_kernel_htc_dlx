@@ -2,10 +2,6 @@
  *  GPIO driven matrix keyboard driver
  *
  *  Copyright (c) 2008 Marek Vasut <marek.vasut@gmail.com>
-<<<<<<< HEAD
-=======
- *  Copyright (c) 2012, The Linux Foundation. All rights reserved.
->>>>>>> e833aca... Update copyright to The Linux Foundation
  *
  *  Based on corgikbd.c
  *
