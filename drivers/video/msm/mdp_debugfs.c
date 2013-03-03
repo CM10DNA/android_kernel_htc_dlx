@@ -1,4 +1,4 @@
-/* Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -37,7 +37,6 @@
 #ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL
 #include "hdmi_msm.h"
 #endif
-#include <mach/msm_rtb_enable.h>
 
 #define MDP_DEBUG_BUF	2048
 

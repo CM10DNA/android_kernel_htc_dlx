@@ -1,4 +1,4 @@
-/* Copyright (c) 2008-2009, 2012 Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2008-2009, 2012 The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -53,7 +53,7 @@
 #define MDP_PRIM_VSYNC_OUT_CTRL	0x318
 #define MDP_PRIM_VSYNC_INIT_VAL	0x328
 #endif
-#include <mach/msm_rtb_enable.h>
+
 extern mddi_lcd_type mddi_lcd_idx;
 extern spinlock_t mdp_spin_lock;
 extern struct workqueue_struct *mdp_vsync_wq;
