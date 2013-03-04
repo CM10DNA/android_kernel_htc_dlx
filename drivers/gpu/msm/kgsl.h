@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /* Copyright (c) 2008-2012, Code Aurora Forum. All rights reserved.
-=======
-/* Copyright (c) 2008-2013, The Linux Foundation. All rights reserved.
->>>>>>> ef3456c... msm: kgsl: Move events to context specific lists
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
