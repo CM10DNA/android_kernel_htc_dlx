@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /* Copyright (c) 2010, Code Aurora Forum. All rights reserved.
-=======
-/* Copyright (c) 2010,2013, The Linux Foundation. All rights reserved.
->>>>>>> ffc7741... msm: vidc: Add support for NV21 color format encoding
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
