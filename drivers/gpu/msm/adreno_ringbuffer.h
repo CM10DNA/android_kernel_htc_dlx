@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /* Copyright (c) 2002,2007-2012, Code Aurora Forum. All rights reserved.
-=======
-/* Copyright (c) 2002,2007-2013, The Linux Foundation. All rights reserved.
->>>>>>> 740f674... msm: kgsl: Remove duplicate code for checking timestamps
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
