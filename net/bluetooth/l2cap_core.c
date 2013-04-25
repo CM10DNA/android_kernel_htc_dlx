@@ -3945,55 +3945,18 @@ static void l2cap_conf_rfc_get(struct sock *sk, void *rsp, int len)
 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
 
 		switch (type) {
-		case L2CAP_CONF_MTU:
-			if (val < L2CAP_DEFAULT_MIN_MTU) {
-				*result = L2CAP_CONF_UNACCEPT;
-				pi->imtu = L2CAP_DEFAULT_MIN_MTU;
-			} else
-				pi->imtu = val;
-			l2cap_add_conf_opt(&ptr, L2CAP_CONF_MTU, 2, pi->imtu);
-			break;
-
-		case L2CAP_CONF_FLUSH_TO:
-			pi->flush_to = val;
-			l2cap_add_conf_opt(&ptr, L2CAP_CONF_FLUSH_TO,
-							2, pi->flush_to);
-			break;
-
 		case L2CAP_CONF_RFC:
 			if (olen == sizeof(rfc))
 				memcpy(&rfc, (void *)val, olen);
-
-			if ((pi->conf_state & L2CAP_CONF_STATE2_DEVICE) &&
-							rfc.mode != pi->mode)
-				return -ECONNREFUSED;
-
-			pi->fcs = 0;
-
-			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC,
-					sizeof(rfc), (unsigned long) &rfc);
 			break;
-
 		case L2CAP_CONF_EXT_WINDOW:
-			pi->ack_win = min_t(u16, val, pi->ack_win);
-
-			l2cap_add_conf_opt(&ptr, L2CAP_CONF_EXT_WINDOW,
-					2, pi->tx_win);
-			break;
-
-		default:
+			txwin_ext = val;
 			break;
 		}
 	}
 
-	if (pi->mode == L2CAP_MODE_BASIC && pi->mode != rfc.mode)
-		return -ECONNREFUSED;
-
-	pi->mode = rfc.mode;
-
-	if (*result == L2CAP_CONF_SUCCESS) {
-		switch (rfc.mode) {
-		case L2CAP_MODE_ERTM:
+	switch (rfc.mode) {
+	case L2CAP_MODE_ERTM:
 		pi->retrans_timeout = le16_to_cpu(rfc.retrans_timeout);
 		pi->monitor_timeout = le16_to_cpu(rfc.monitor_timeout);
 		pi->mps    = le16_to_cpu(rfc.max_pdu_size);
