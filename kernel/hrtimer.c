@@ -61,6 +61,7 @@
 DEFINE_PER_CPU(struct hrtimer_cpu_base, hrtimer_bases) =
 {
 
+	.lock = __RAW_SPIN_LOCK_UNLOCKED(hrtimer_bases.lock),
 	.clock_base =
 	{
 		{
@@ -1643,7 +1644,6 @@ static void __cpuinit init_hrtimers_cpu(int cpu)
 	unsigned long flags;
 
 	if (!cpu_base_done[cpu]) {
-		raw_spin_lock_init(&cpu_base->lock);
 		cpu_base_done[cpu] = 1;
 	}
 
