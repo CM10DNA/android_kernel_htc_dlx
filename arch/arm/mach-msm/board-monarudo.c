@@ -855,31 +855,37 @@ static int pm8921_is_wireless_charger(void)
 		return 0;
 }
 
+static int critical_alarm_voltage_mv[] = {3000, 3100, 3200, 3400};
+
 static struct htc_battery_platform_data htc_battery_pdev_data = {
 	.guage_driver = 0,
 	.chg_limit_active_mask = HTC_BATT_CHG_LIMIT_BIT_TALK |
-								HTC_BATT_CHG_LIMIT_BIT_NAVI,
-	.critical_low_voltage_mv = 3100,
-	.critical_alarm_voltage_mv = 3000,
+								HTC_BATT_CHG_LIMIT_BIT_NAVI |
+								HTC_BATT_CHG_LIMIT_BIT_THRML,
+	.critical_low_voltage_mv = 3200,
+	.critical_alarm_vol_ptr = critical_alarm_voltage_mv,
+	.critical_alarm_vol_cols = sizeof(critical_alarm_voltage_mv) / sizeof(int),
 	.overload_vol_thr_mv = 4000,
 	.overload_curr_thr_ma = 0,
 	
 	.icharger.name = "pm8921",
+	.icharger.set_limit_charge_enable = pm8921_limit_charge_enable,
+	.icharger.get_attr_text = pm8921_charger_get_attr_text,
+	.icharger.enable_5v_output = NULL,
 	.icharger.get_charging_source = pm8921_get_charging_source,
 	.icharger.get_charging_enabled = pm8921_get_charging_enabled,
 	.icharger.set_charger_enable = pm8921_charger_enable,
 	.icharger.set_pwrsrc_enable = pm8921_pwrsrc_enable,
 	.icharger.set_pwrsrc_and_charger_enable =
 						pm8921_set_pwrsrc_and_charger_enable,
-	.icharger.set_limit_charge_enable = pm8921_limit_charge_enable,
 	.icharger.is_ovp = pm8921_is_charger_ovp,
 	.icharger.is_batt_temp_fault_disable_chg =
 						pm8921_is_batt_temp_fault_disable_chg,
-	.icharger.is_under_rating = pm8921_is_pwrsrc_under_rating,
 	.icharger.charger_change_notifier_register =
 						cable_detect_register_notifier,
 	.icharger.dump_all = pm8921_dump_all,
-	.icharger.get_attr_text = pm8921_charger_get_attr_text,
+	.icharger.is_safty_timer_timeout = pm8921_is_chg_safety_timer_timeout,
+
 	
 	.igauge.name = "pm8921",
 	.igauge.get_battery_voltage = pm8921_get_batt_voltage,
@@ -896,6 +902,10 @@ static struct htc_battery_platform_data htc_battery_pdev_data = {
 	.igauge.enable_lower_voltage_alarm = pm8xxx_batt_lower_alarm_enable,
 	.igauge.set_lower_voltage_alarm_threshold =
 						pm8xxx_batt_lower_alarm_threshold_set,
+	
+#ifdef CONFIG_THERMAL_TSENS8960
+	.get_thermal_sensor_temp = tsens_get_sensor_temp,
+#endif
 };
 static struct platform_device htc_battery_pdev = {
 	.name = "htc_battery",
@@ -908,26 +918,8 @@ static struct platform_device htc_battery_pdev = {
 static struct pm8921_charger_batt_param chg_batt_params[] = {
 	
 	[0] = {
-		.max_voltage = 4200,
-		.cool_bat_voltage = 4200,
-		.warm_bat_voltage = 4000,
-	},
-	
-	[1] = {
 		.max_voltage = 4340,
 		.cool_bat_voltage = 4340,
-		.warm_bat_voltage = 4000,
-	},
-	
-	[2] = {
-		.max_voltage = 4300,
-		.cool_bat_voltage = 4300,
-		.warm_bat_voltage = 4000,
-	},
-	
-	[3] = {
-		.max_voltage = 4350,
-		.cool_bat_voltage = 4350,
 		.warm_bat_voltage = 4000,
 	},
 };
