@@ -4662,16 +4662,8 @@ static void __init monarudo_common_init(void)
 	platform_device_register(&monarudo_device_rpm_regulator);
 	if (msm_xo_init())
 		pr_err("Failed to initialize XO votes\n");
-	
-	if (system_rev <= XC)
-		clk_ignor_list_add("msm_sdcc.3", "core_clk", &apq8064_clock_init_data);
-	else if (system_rev >= XD)
-		clk_ignor_list_add("msm_sdcc.3", "core_clk", &monarudo_clock_init_data_xd);
-	
-	if ( system_rev <= XC )
-	msm_clock_init(&apq8064_clock_init_data);
-	else if ( system_rev >= XD )
-		msm_clock_init(&monarudo_clock_init_data_xd);
+	clk_ignor_list_add("msm_sdcc.3", "core_clk", &apq8064_clock_init_data_r2);
+	msm_clock_init(&apq8064_clock_init_data_r2);
 	monarudo_init_gpiomux();
 #ifdef CONFIG_RESET_BY_CABLE_IN
 	pr_info("[CABLE] Enable Ac Reset Function.(%d) \n", system_rev);
