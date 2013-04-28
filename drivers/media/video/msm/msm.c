@@ -420,7 +420,7 @@ static int msm_send_open_server(struct msm_cam_v4l2_device *pcam)
 
 	memset(&ctrlcmd, 0, sizeof(ctrlcmd)); 
 	ctrlcmd.type	   = MSM_V4L2_OPEN;
-	ctrlcmd.timeout_ms = 20000;
+	ctrlcmd.timeout_ms = 10000;
 	ctrlcmd.length	 = strnlen(g_server_dev.config_info.config_dev_name[0],
 				MAX_DEV_NAME_LEN)+1;
 	ctrlcmd.value    = (char *)g_server_dev.config_info.config_dev_name[0];
@@ -442,7 +442,7 @@ static int msm_send_close_server(struct msm_cam_v4l2_device *pcam)
 
 	memset(&ctrlcmd, 0, sizeof(ctrlcmd)); 
 	ctrlcmd.type	   = MSM_V4L2_CLOSE;
-	ctrlcmd.timeout_ms = 20000;
+	ctrlcmd.timeout_ms = 10000;
 	ctrlcmd.length	 = strnlen(g_server_dev.config_info.config_dev_name[0],
 				MAX_DEV_NAME_LEN)+1;
 	ctrlcmd.value    = (char *)g_server_dev.config_info.config_dev_name[0];
@@ -557,7 +557,7 @@ static int msm_server_set_fmt_mplane(struct msm_cam_v4l2_device *pcam, int idx,
 	ctrlcmd.type       = MSM_V4L2_VID_CAP_TYPE;
 	ctrlcmd.length     = sizeof(struct img_plane_info);
 	ctrlcmd.value      = (void *)&plane_info;
-	ctrlcmd.timeout_ms = 20000;
+	ctrlcmd.timeout_ms = 10000;
 	ctrlcmd.vnode_id   = pcam->vnode_id;
 	ctrlcmd.queue_idx = pcam->server_queue_idx;
 
@@ -585,7 +585,7 @@ static int msm_server_streamon(struct msm_cam_v4l2_device *pcam, int idx)
 
 	memset(&ctrlcmd, 0, sizeof(ctrlcmd)); 
 	ctrlcmd.type	   = MSM_V4L2_STREAM_ON;
-	ctrlcmd.timeout_ms = 6000;
+	ctrlcmd.timeout_ms = 10000;
 	ctrlcmd.length	 = 0;
 	ctrlcmd.value    = NULL;
 	ctrlcmd.stream_type = pcam->dev_inst[idx]->image_mode;
@@ -608,7 +608,7 @@ static int msm_server_streamoff(struct msm_cam_v4l2_device *pcam, int idx)
 	D("%s, pcam = 0x%x\n", __func__, (u32)pcam);
 	memset(&ctrlcmd, 0, sizeof(ctrlcmd));  
 	ctrlcmd.type        = MSM_V4L2_STREAM_OFF;
-	ctrlcmd.timeout_ms  = 20000;
+	ctrlcmd.timeout_ms  = 10000;
 	ctrlcmd.length      = 0;
 	ctrlcmd.value       = NULL;
 	ctrlcmd.stream_type = pcam->dev_inst[idx]->image_mode;
@@ -674,7 +674,7 @@ static int msm_server_proc_ctrl_cmd(struct msm_cam_v4l2_device *pcam,
 	if (tmp_cmd->timeout_ms > 0)
 		ctrlcmd.timeout_ms = tmp_cmd->timeout_ms;
 	else
-		ctrlcmd.timeout_ms = 2000;
+		ctrlcmd.timeout_ms = 1000;
 	ctrlcmd.vnode_id = pcam->vnode_id;
 	ctrlcmd.queue_idx = pcam->server_queue_idx;
 	ctrlcmd.config_ident = g_server_dev.config_info.config_dev_id[0];
@@ -730,7 +730,7 @@ static int msm_server_s_ctrl(struct msm_cam_v4l2_device *pcam,
 	ctrlcmd.length = sizeof(struct v4l2_control);
 	ctrlcmd.value = (void *)ctrl_data;
 	memcpy(ctrlcmd.value, ctrl, ctrlcmd.length);
-	ctrlcmd.timeout_ms = 2000;
+	ctrlcmd.timeout_ms = 1000;
 	ctrlcmd.vnode_id = pcam->vnode_id;
 	ctrlcmd.queue_idx = pcam->server_queue_idx;
 	ctrlcmd.config_ident = g_server_dev.config_info.config_dev_id[0];
@@ -763,7 +763,7 @@ static int msm_server_g_ctrl(struct msm_cam_v4l2_device *pcam,
 	ctrlcmd.length = sizeof(struct v4l2_control);
 	ctrlcmd.value = (void *)ctrl_data;
 	memcpy(ctrlcmd.value, ctrl, ctrlcmd.length);
-	ctrlcmd.timeout_ms = 2000;
+	ctrlcmd.timeout_ms = 1000;
 	ctrlcmd.vnode_id = pcam->vnode_id;
 	ctrlcmd.queue_idx = pcam->server_queue_idx;
 	ctrlcmd.config_ident = g_server_dev.config_info.config_dev_id[0];
@@ -791,7 +791,7 @@ static int msm_server_q_ctrl(struct msm_cam_v4l2_device *pcam,
 	ctrlcmd.length = sizeof(struct v4l2_queryctrl);
 	ctrlcmd.value = (void *)ctrl_data;
 	memcpy(ctrlcmd.value, queryctrl, ctrlcmd.length);
-	ctrlcmd.timeout_ms = 2000;
+	ctrlcmd.timeout_ms = 1000;
 	ctrlcmd.vnode_id = pcam->vnode_id;
 	ctrlcmd.config_ident = g_server_dev.config_info.config_dev_id[0];
 
@@ -899,7 +899,7 @@ static int msm_camera_get_crop(struct msm_cam_v4l2_device *pcam,
 	ctrlcmd.type = MSM_V4L2_GET_CROP;
 	ctrlcmd.length = sizeof(struct v4l2_crop);
 	ctrlcmd.value = (void *)crop;
-	ctrlcmd.timeout_ms = 2000;
+	ctrlcmd.timeout_ms = 1000;
 	ctrlcmd.vnode_id = pcam->vnode_id;
 	ctrlcmd.queue_idx = pcam->server_queue_idx;
 	ctrlcmd.stream_type = pcam->dev_inst[idx]->image_mode;
@@ -2744,13 +2744,6 @@ static long msm_ioctl_config(struct file *fp, unsigned int cmd,
 							k_msg_value,
 					 k_isp_event->isp_data.isp_msg.len)) {
 						rc = -EINVAL;
-						
-						pr_err("%s: %d copy_to_user failed. msg_id: %d, frame id: %d\n",
-							__func__, __LINE__, k_isp_event->isp_data.isp_msg.msg_id,
-							k_isp_event->isp_data.isp_msg.frame_id);
-						kfree(k_msg_value);
-						kfree(k_isp_event);
-						
 						break;
 					}
 					kfree(k_msg_value);
@@ -2761,12 +2754,6 @@ static long msm_ioctl_config(struct file *fp, unsigned int cmd,
 				(void *)&u_isp_event, sizeof(
 				struct msm_isp_event_ctrl))) {
 			rc = -EINVAL;
-			
-			pr_err("%s: %d copy_to_user failed. msg_id: %d, frame id: %d\n",
-				__func__, __LINE__, k_isp_event->isp_data.isp_msg.msg_id,
-				k_isp_event->isp_data.isp_msg.frame_id);
-			kfree(k_isp_event);
-			
 			break;
 		}
 		kfree(k_isp_event);
@@ -3003,7 +2990,6 @@ static uint32_t led_wimax_status_value;
 static uint32_t led_hotspot_status_value;
 static uint16_t led_low_temp_limit;
 static uint16_t led_low_cap_limit;
-static uint16_t led_low_cap_limit_dual;
 
 static ssize_t led_ril_status_get(struct device *dev,
 				struct device_attribute *attr, char *buf)
@@ -3083,14 +3069,6 @@ static ssize_t low_cap_limit_get(struct device *dev,
 	return length;
 }
 
-static ssize_t low_cap_limit_dual_get(struct device *dev,
-				struct device_attribute *attr, char *buf)
-{
-	ssize_t length;
-	length = sprintf(buf, "%d\n", led_low_cap_limit_dual);
-	return length;
-}
-
 static DEVICE_ATTR(led_ril_status, 0644,
 	led_ril_status_get,
 	led_ril_status_set);
@@ -3109,10 +3087,6 @@ static DEVICE_ATTR(low_temp_limit, 0444,
 
 static DEVICE_ATTR(low_cap_limit, 0444,
 	low_cap_limit_get,
-	NULL);
-
-static DEVICE_ATTR(low_cap_limit_dual, 0444,
-	low_cap_limit_dual_get,
 	NULL);
 
 static int msm_sensor_attr_node(struct msm_camera_sensor_info *sdata)
@@ -3177,13 +3151,6 @@ static int msm_sensor_attr_node(struct msm_camera_sensor_info *sdata)
 		ret = -EFAULT;
 		goto error;
 	}
-	ret = sysfs_create_file(led_status_obj,
-		&dev_attr_low_cap_limit_dual.attr);
-	if (ret) {
-		pr_info("msm_camera: sysfs_create_file dev_attr_low_cap_limit_dual failed\n");
-		ret = -EFAULT;
-		goto error;
-	}
 
 	if ((sdata->flash_data->flash_type != MSM_CAMERA_FLASH_NONE) &&
 		sdata->flash_cfg && sdata->flash_cfg->flash_info) {
@@ -3194,7 +3161,6 @@ static int msm_sensor_attr_node(struct msm_camera_sensor_info *sdata)
 
 	led_low_temp_limit = sdata->flash_cfg->low_temp_limit;
 	led_low_cap_limit = sdata->flash_cfg->low_cap_limit;
-	led_low_cap_limit_dual = sdata->flash_cfg->low_cap_limit_dual;
 
 	return ret;
 
@@ -3247,6 +3213,98 @@ error:
 }
 #endif
 
+
+#ifdef CONFIG_RAWCHIP
+int rawchip_init(void *arg)
+{
+	struct msm_cam_media_controller *pmctl = NULL;
+	struct msm_sensor_ctrl_t *s_ctrl = NULL;
+	struct rawchip_sensor_data rawchip_data;
+	int res = MSM_SENSOR_RES_FULL;
+	struct timespec ts_start, ts_end;
+
+	pr_info("%s: E\n", __func__);
+
+	if (g_server_dev.mctl[0].handle == 0) {
+		pr_err("%s: cannot get mctl handle", __func__);
+		return -EINVAL;
+	}
+
+	pmctl = msm_camera_get_mctl(g_server_dev.mctl[0].handle);
+	if (!pmctl) {
+		pr_err("%s: invalid mctl controller", __func__);
+		return -EINVAL;
+	}
+
+	s_ctrl = get_sctrl(pmctl->sensor_sdev);
+	if (!s_ctrl) {
+		pr_err("%s: invalid sensor contl", __func__);
+		return -EINVAL;
+	}
+#if 1
+	rawchip_data.sensor_name = s_ctrl->sensordata->sensor_name;
+	rawchip_data.datatype = s_ctrl->curr_csi_params->csid_params.lut_params.vc_cfg->dt;
+	rawchip_data.lane_cnt = s_ctrl->curr_csi_params->csid_params.lane_cnt;
+	rawchip_data.pixel_clk = s_ctrl->msm_sensor_reg->output_settings[res].op_pixel_clk;
+	rawchip_data.mirror_flip = s_ctrl->mirror_flip;
+	rawchip_data.width = s_ctrl->msm_sensor_reg->output_settings[res].x_output;
+	rawchip_data.height = s_ctrl->msm_sensor_reg->output_settings[res].y_output;
+	rawchip_data.line_length_pclk = s_ctrl->msm_sensor_reg->output_settings[res].line_length_pclk;
+	rawchip_data.frame_length_lines = s_ctrl->msm_sensor_reg->output_settings[res].frame_length_lines;
+	rawchip_data.x_addr_start = s_ctrl->msm_sensor_reg->output_settings[res].x_addr_start;
+	rawchip_data.y_addr_start = s_ctrl->msm_sensor_reg->output_settings[res].y_addr_start;
+	rawchip_data.x_addr_end = s_ctrl->msm_sensor_reg->output_settings[res].x_addr_end;
+	rawchip_data.y_addr_end = s_ctrl->msm_sensor_reg->output_settings[res].y_addr_end;
+	rawchip_data.x_even_inc = s_ctrl->msm_sensor_reg->output_settings[res].x_even_inc;
+	rawchip_data.x_odd_inc = s_ctrl->msm_sensor_reg->output_settings[res].x_odd_inc;
+	rawchip_data.y_even_inc = s_ctrl->msm_sensor_reg->output_settings[res].y_even_inc;
+	rawchip_data.y_odd_inc = s_ctrl->msm_sensor_reg->output_settings[res].y_odd_inc;
+	rawchip_data.binning_rawchip = s_ctrl->msm_sensor_reg->output_settings[res].binning_rawchip;
+	rawchip_data.fullsize_width = s_ctrl->msm_sensor_reg->output_settings[MSM_SENSOR_RES_FULL].x_output;
+	rawchip_data.fullsize_height = s_ctrl->msm_sensor_reg->output_settings[MSM_SENSOR_RES_FULL].y_output;
+	rawchip_data.fullsize_line_length_pclk =
+		s_ctrl->msm_sensor_reg->output_settings[MSM_SENSOR_RES_FULL].line_length_pclk;
+	rawchip_data.fullsize_frame_length_lines =
+		s_ctrl->msm_sensor_reg->output_settings[MSM_SENSOR_RES_FULL].frame_length_lines;
+	rawchip_data.use_rawchip = s_ctrl->sensordata->use_rawchip;
+#else 
+	rawchip_data.sensor_name = s_ctrl->sensordata->sensor_name;
+	rawchip_data.datatype = CSI_RAW10;
+	rawchip_data.lane_cnt = 4;
+	rawchip_data.pixel_clk = 259200000;
+	rawchip_data.mirror_flip = CAMERA_SENSOR_NONE;
+	rawchip_data.width = 0xCD0;
+	rawchip_data.height = 0x9A0;
+	rawchip_data.line_length_pclk = 0xD70;
+	rawchip_data.frame_length_lines = 0x9D0;
+	rawchip_data.x_addr_start = 0;
+	rawchip_data.y_addr_start = 0;
+	rawchip_data.x_addr_end = 0xCCF;
+	rawchip_data.y_addr_end = 0x99F;
+	rawchip_data.x_even_inc = 1;
+	rawchip_data.x_odd_inc = 1;
+	rawchip_data.y_even_inc = 1;
+	rawchip_data.y_odd_inc = 1;
+	rawchip_data.binning_rawchip = 0x11;
+	rawchip_data.fullsize_width = 0xCD0;
+	rawchip_data.fullsize_height = 0x9A0;
+	rawchip_data.fullsize_line_length_pclk = 0xD70;
+	rawchip_data.fullsize_frame_length_lines = 0x9D0;
+	rawchip_data.use_rawchip = RAWCHIP_ENABLE;
+#endif
+
+	pr_info("%s: sensor_name = %s, width = %d, height = %d\n", __func__,
+		rawchip_data.sensor_name, rawchip_data.width, rawchip_data.height);
+
+	ktime_get_ts(&ts_start);
+	rawchip_set_size(rawchip_data);
+	ktime_get_ts(&ts_end);
+	pr_info("%s: %ld ms\n", __func__,
+		(ts_end.tv_sec-ts_start.tv_sec)*1000+(ts_end.tv_nsec-ts_start.tv_nsec)/1000000);
+
+	return 0;
+}
+#endif
 
 int msm_setup_v4l2_event_queue(struct v4l2_fh *eventHandle,
 	struct video_device *pvdev)

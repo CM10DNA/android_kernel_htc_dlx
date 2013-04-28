@@ -438,11 +438,7 @@ static irqreturn_t vpe_parse_irq(int irq_num, void *data)
 }
 
 static struct msm_cam_clk_info vpe_clk_info[] = {
-#ifdef CONFIG_ARCH_APQ8064
 	{"vpe_clk", 160000000},
-#else
-	{"vpe_clk", 200000000},
-#endif
 	{"vpe_pclk", -1},
 };
 

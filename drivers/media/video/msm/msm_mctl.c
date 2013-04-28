@@ -39,14 +39,11 @@
 #include "msm_vpe.h"
 #include "msm_vfe32.h"
 
-
+#if 1	
 #ifdef CONFIG_RAWCHIP
 #include "rawchip/rawchip.h"
 #endif
-
-#ifdef CONFIG_RAWCHIPII
-#include "yushanII/yushanII.h"
-#endif
+#endif 
 
 #ifdef CONFIG_MSM_CAMERA_DEBUG
 #define D(fmt, args...) pr_debug("msm_mctl: " fmt, ##args)
@@ -195,10 +192,6 @@ static int msm_get_sensor_info(
 	info.actuator_enabled = sdata->actuator_info ? 1 : 0;
 	info.strobe_flash_enabled = sdata->strobe_flash_data ? 1 : 0;
 
-	pr_info("msm_get_sensor_info,sdata->htc_image=%d,sdata->use_rawchip=%d,sdata->hdr_mode=%d,sdata->video_hdr_capability=%d",sdata->htc_image,sdata->use_rawchip,sdata->hdr_mode,sdata->video_hdr_capability);
-	info.htc_image = sdata->htc_image;
-	info.hdr_mode = sdata->hdr_mode;
-	info.video_hdr_capability = sdata->video_hdr_capability;
 	
 	if (sdata->use_rawchip == RAWCHIP_ENABLE)
 		info.use_rawchip = RAWCHIP_ENABLE;
@@ -304,7 +297,6 @@ static int msm_mctl_cmd(struct msm_cam_media_controller *p_mctl,
 			return -EFAULT;
 		}
 		cdata.is_af_supported = 0;
-		cdata.is_ois_supported = 0;
 		rc = 0;
 
 		if (p_mctl->actctrl->a_config) {
@@ -315,7 +307,6 @@ static int msm_mctl_cmd(struct msm_cam_media_controller *p_mctl,
 				sdata->actuator_info->cam_name);
 
 			cdata.is_af_supported = 1;
-			cdata.is_ois_supported = p_mctl->actctrl->is_ois_supported;
 			cdata.cfg.cam_name =
 				(enum af_camera_name)sdata->
 				actuator_info->cam_name;
@@ -348,7 +339,6 @@ static int msm_mctl_cmd(struct msm_cam_media_controller *p_mctl,
 				break;
 			}
 			act_data.is_af_supported = 0;
-			act_data.is_ois_supported = 0;
 			rc = copy_to_user((void *)argp,
 					 &act_data,
 					 sizeof(struct msm_actuator_cfg_data));
@@ -606,11 +596,6 @@ static int msm_mctl_open(struct msm_cam_media_controller *p_mctl,
 		
 		
 
-		
-		if (p_mctl->sdata->camera_on_check_vcm)
-			p_mctl->sdata->camera_on_check_vcm();
-		
-
 		csid_core = camdev->csid_core;
 		rc = msm_mctl_register_subdevs(p_mctl, csid_core);
 		if (rc < 0) {
@@ -704,17 +689,6 @@ static int msm_mctl_open(struct msm_cam_media_controller *p_mctl,
 			}
 #endif
 		}
-
-		if (p_mctl->sdata->htc_image == HTC_CAMERA_IMAGE_YUSHANII_BOARD) {
-#ifdef CONFIG_RAWCHIPII
-			rc = YushanII_open_init();
-			if (rc < 0) {
-				goto sensor_sdev_failed;
-			}
-#endif
-		}
-
-
 #endif 
 
 		
@@ -724,6 +698,10 @@ static int msm_mctl_open(struct msm_cam_media_controller *p_mctl,
 			pr_err("%s: sensor powerup failed: %d\n", __func__, rc);
 			goto sensor_sdev_failed;
 		}
+
+#if 1		
+		msm_sensor_match_id(s_ctrl);
+#endif 
 
 		
 		if (p_mctl->actctrl->a_init_table)
@@ -738,7 +716,7 @@ static int msm_mctl_open(struct msm_cam_media_controller *p_mctl,
 		if (p_mctl->actctrl->a_power_up)
 			rc = p_mctl->actctrl->a_power_up(
 				p_mctl->sdata->actuator_info);
-		mdelay(50);
+
 		if (rc < 0) {
 			pr_err("%s: act power failed:%d\n", __func__, rc);
 			goto act_power_up_failed;
@@ -856,12 +834,6 @@ static int msm_mctl_release(struct msm_cam_media_controller *p_mctl)
 	if (p_mctl->sdata->use_rawchip) {
 #ifdef CONFIG_RAWCHIP
 		rawchip_release();
-#endif
-	}
-
-	if (p_mctl->sdata->htc_image == HTC_CAMERA_IMAGE_YUSHANII_BOARD) {
-#ifdef CONFIG_RAWCHIPII
-		YushanII_release();
 #endif
 	}
 	

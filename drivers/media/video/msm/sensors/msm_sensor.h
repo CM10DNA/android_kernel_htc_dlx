@@ -35,21 +35,6 @@
 #define MSM_SENSOR_MCLK_16HZ 16000000
 #define MSM_SENSOR_MCLK_24HZ 24000000
 
-extern uint32_t ois_line;
-
-typedef enum {
-	OTP_VCM_CALIBRATION = 0,
-	OTP_NUM_TYPES
-} OTP_DATA_TYPE;
-typedef enum {
-	OTP_READ_DATA_SUCCESS = 0,
-	OTP_DATA_NOT_READY_ERROR,
-	OTP_READ_DATA_TYPE_ERROR,
-	OTP_READ_DATA_STATUS_NUM
-} OTP_DATA_READ_STATUS;
-int set_VCM_OTP(int type, uint8_t* data, int size);
-int get_VCM_OTP(int type, uint8_t* data, int size);
-
 enum msm_sensor_reg_update {
 	
 	MSM_SENSOR_REG_INIT,
@@ -94,29 +79,15 @@ struct msm_sensor_reg_t {
 	uint8_t start_stream_conf_size;
 	struct msm_camera_i2c_reg_conf *stop_stream_conf;
 	uint8_t stop_stream_conf_size;
-
-	struct msm_camera_i2c_reg_conf *start_stream_conf_yushanii;
-	uint8_t start_stream_conf_size_yushanii;
-	struct msm_camera_i2c_reg_conf *stop_stream_conf_yushanii;
-	uint8_t stop_stream_conf_size_yushanii;
-
 	struct msm_camera_i2c_reg_conf *group_hold_on_conf;
 	uint8_t group_hold_on_conf_size;
 	struct msm_camera_i2c_reg_conf *group_hold_off_conf;
 	uint8_t group_hold_off_conf_size;
 	struct msm_camera_i2c_conf_array *init_settings;
 	uint8_t init_size;
-
-	struct msm_camera_i2c_conf_array *init_settings_yushanii;
-	uint8_t init_size_yushanii;
-
-	struct msm_camera_i2c_conf_array *init_settings_2;
-	uint8_t init_size_2;
-
 	struct msm_camera_i2c_conf_array *mode_settings;
 	struct msm_camera_i2c_conf_array *no_effect_settings;
 	struct msm_sensor_output_info_t *output_settings;
-	struct msm_sensor_output_info_t *output_settings_yushanii;
 	uint8_t num_conf;
 };
 
@@ -153,9 +124,6 @@ struct msm_sensor_fn_t {
 			uint16_t, uint32_t);
 	int32_t (*sensor_write_exp_gain_ex) (struct msm_sensor_ctrl_t *,
 			int, uint16_t, uint16_t, uint32_t); 
-	int32_t (*sensor_write_hdr_outdoor_flag) (struct msm_sensor_ctrl_t *, uint8_t); 
-	int32_t (*sensor_write_hdr_exp_gain_ex) (struct msm_sensor_ctrl_t *,
-			int, uint16_t, uint16_t, uint16_t, uint32_t, uint32_t); 
 	int32_t (*sensor_write_snapshot_exp_gain_ex) (struct msm_sensor_ctrl_t *,
 			int, uint16_t, uint16_t, uint32_t); 
 	int32_t (*sensor_setting) (struct msm_sensor_ctrl_t *,
@@ -178,12 +146,10 @@ struct msm_sensor_fn_t {
 		(struct msm_sensor_ctrl_t *s_ctrl, uint16_t res);
 
 	int32_t (*sensor_set_dig_gain) (struct msm_sensor_ctrl_t *, uint16_t); 
-	int32_t (*sensor_set_hdr_dig_gain) (struct msm_sensor_ctrl_t *, uint16_t, uint16_t); 
 	
 	void (*sensor_ov2722_write_exp_line) (struct msm_sensor_ctrl_t *, uint16_t); 
 
 	int (*sensor_write_output_settings_specific)(struct msm_sensor_ctrl_t *s_ctrl, uint16_t res); 
-	int (*sensor_i2c_read_otp)(struct sensor_cfg_data *cdata, struct msm_sensor_ctrl_t *s_ctrl);
 };
 
 struct msm_sensor_ctrl_t {
@@ -227,7 +193,6 @@ struct msm_sensor_ctrl_t {
 	long clk_rate;
 	int mirror_flip;	
 	struct mutex *sensor_first_mutex;  
-	int hdr_mode;
 };
 
 void msm_sensor_start_stream(struct msm_sensor_ctrl_t *s_ctrl);

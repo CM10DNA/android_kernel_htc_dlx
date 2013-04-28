@@ -589,6 +589,10 @@ int msm_cam_server_open_mctl_session(struct msm_cam_v4l2_device *pcam,
 	int *p_active);
 int msm_cam_server_close_mctl_session(struct msm_cam_v4l2_device *pcam);
 
+#ifdef CONFIG_RAWCHIP
+int rawchip_init(void *arg);
+#endif
+
 #endif 
 
 #endif 

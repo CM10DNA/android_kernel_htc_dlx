@@ -156,8 +156,10 @@ static int msm_csid_subdev_g_chip_ident(struct v4l2_subdev *sd,
 	chip->revision = 0;
 	return 0;
 }
-
 static struct msm_cam_clk_info csid_clk_info[] = {
+};
+
+static struct camera_vreg_t csid_vreg_info[] = {
 };
 
 static int msm_csid_init(struct v4l2_subdev *sd, uint32_t *csid_version)
@@ -177,11 +179,26 @@ static int msm_csid_init(struct v4l2_subdev *sd, uint32_t *csid_version)
 		return rc;
 	}
 
+	rc = msm_camera_config_vreg(&csid_dev->pdev->dev, csid_vreg_info,
+		ARRAY_SIZE(csid_vreg_info), &csid_dev->csi_vdd, 1);
+	if (rc < 0) {
+		pr_err("%s: regulator on failed\n", __func__);
+		goto vreg_config_failed;
+	}
+
+	rc = msm_camera_enable_vreg(&csid_dev->pdev->dev, csid_vreg_info,
+		ARRAY_SIZE(csid_vreg_info), &csid_dev->csi_vdd, 1);
+	if (rc < 0) {
+		pr_err("%s: regulator enable failed\n", __func__);
+		goto vreg_enable_failed;
+	}
+
 	rc = msm_cam_clk_enable(&csid_dev->pdev->dev, csid_clk_info,
 		csid_dev->csid_clk, ARRAY_SIZE(csid_clk_info), 1);
 	if (rc < 0) {
 		iounmap(csid_dev->base);
 		csid_dev->base = NULL;
+
 		pr_err("%s: regulator enable failed\n", __func__);
 		goto clk_enable_failed;
 	}
@@ -205,9 +222,16 @@ static int msm_csid_init(struct v4l2_subdev *sd, uint32_t *csid_version)
 	return rc;
 
 clk_enable_failed:
+	msm_camera_enable_vreg(&csid_dev->pdev->dev, csid_vreg_info,
+		ARRAY_SIZE(csid_vreg_info), &csid_dev->csi_vdd, 0);
+vreg_enable_failed:
+	msm_camera_config_vreg(&csid_dev->pdev->dev, csid_vreg_info,
+		ARRAY_SIZE(csid_vreg_info), &csid_dev->csi_vdd, 0);
+vreg_config_failed:
 	iounmap(csid_dev->base);
 	csid_dev->base = NULL;
 	pr_info("%s:%d\n", __func__, __LINE__);
+
 	return rc;
 }
 
@@ -230,6 +254,12 @@ static int msm_csid_release(struct v4l2_subdev *sd)
 	msm_cam_clk_enable(&csid_dev->pdev->dev, csid_clk_info,
 		csid_dev->csid_clk, ARRAY_SIZE(csid_clk_info), 0);
 
+	msm_camera_enable_vreg(&csid_dev->pdev->dev, csid_vreg_info,
+		ARRAY_SIZE(csid_vreg_info), &csid_dev->csi_vdd, 0);
+
+	msm_camera_config_vreg(&csid_dev->pdev->dev, csid_vreg_info,
+		ARRAY_SIZE(csid_vreg_info), &csid_dev->csi_vdd, 0);
+
 	iounmap(csid_dev->base);
 	csid_dev->base = NULL;
 	return 0;
@@ -241,8 +271,8 @@ static long msm_csid_subdev_ioctl(struct v4l2_subdev *sd,
 	int rc = -ENOIOCTLCMD;
 	struct csid_cfg_params cfg_params;
 	struct csid_device *csid_dev = v4l2_get_subdevdata(sd);
-
 	mutex_lock(&csid_dev->mutex);
+
 	switch (cmd) {
 	case VIDIOC_MSM_CSID_CFG:
 		cfg_params.subdev = sd;
@@ -258,8 +288,8 @@ static long msm_csid_subdev_ioctl(struct v4l2_subdev *sd,
 	default:
 		pr_err("%s: command not found\n", __func__);
 	}
-	mutex_unlock(&csid_dev->mutex);
 
+	mutex_unlock(&csid_dev->mutex);
 	return rc;
 }
 static const struct v4l2_subdev_internal_ops msm_csid_internal_ops;

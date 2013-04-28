@@ -63,7 +63,6 @@ int msm_csiphy_config(struct csiphy_cfg_params *cfg_params)
 	int i = 0;
 	uint32_t val = 0;
 	uint8_t lane_cnt = 0, lane_mask = 0;
-
 	struct csiphy_device *csiphy_dev;
 	struct msm_camera_csiphy_params *csiphy_params;
 	void __iomem *csiphybase;
@@ -73,10 +72,8 @@ int msm_csiphy_config(struct csiphy_cfg_params *cfg_params)
 		return -ENOMEM;
 	
 	csiphy_params = cfg_params->parms;
-
 	lane_mask = csiphy_params->lane_mask;
 	lane_cnt = csiphy_params->lane_cnt;
-
 	if (csiphy_params->lane_cnt < 1 || csiphy_params->lane_cnt > 4) {
 		CDBG("%s: unsupported lane cnt %d\n",
 			__func__, csiphy_params->lane_cnt);
@@ -104,7 +101,6 @@ int msm_csiphy_config(struct csiphy_cfg_params *cfg_params)
 	msm_io_w(0x24,
 		csiphybase + MIPI_CSIPHY_INTERRUPT_CLEAR0_ADDR);
 
-	
 	return rc;
 }
 
@@ -164,7 +160,7 @@ static struct msm_cam_clk_info csiphy_clk_info[] = {
 
 static struct camera_vreg_t csiphy_8960_vreg_info[] = {
 	{"mipi_csi_vdd", REG_LDO, 1200000, 1200000, 20000},
-};
+ };
 
 static int msm_csiphy_init(struct v4l2_subdev *sd)
 {
@@ -211,7 +207,6 @@ static int msm_csiphy_init(struct v4l2_subdev *sd)
 #if DBG_CSIPHY
 	enable_irq(csiphy_dev->irq->start);
 #endif
-
 	msm_csiphy_reset(csiphy_dev);
 
 	return 0;
@@ -232,8 +227,6 @@ static int msm_csiphy_release(struct v4l2_subdev *sd)
 #if DBG_CSIPHY
 	disable_irq(csiphy_dev->irq->start);
 #endif
-
-	
 
 	pr_info("%s MIPI_CSIPHY_GLBL_PWR_CFG_ADDR=0x%x",
 		__func__, msm_io_r(csiphy_dev->base + MIPI_CSIPHY_GLBL_PWR_CFG_ADDR));
