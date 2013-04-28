@@ -4124,7 +4124,11 @@ static struct platform_device *common_devices[] __initdata = {
 #ifdef CONFIG_MSM_RTB
 	&monarudo_rtb_device,
 #endif
+
+#ifdef CONFIG_MSM_GEMINI
 	&msm8960_gemini_device,
+#endif
+
 #ifdef CONFIG_BT
 	&msm_device_uart_dm6,
 	&monarudo_rfkill,
