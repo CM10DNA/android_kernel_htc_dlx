@@ -112,6 +112,7 @@
 
 #ifdef CONFIG_FB_MSM_HDMI_MHL
 #include <mach/mhl.h>
+#include <video/msm_hdmi_modes.h>
 #endif
 
 #ifdef CONFIG_SUPPORT_USB_SPEAKER
@@ -155,8 +156,7 @@
 
 #ifdef CONFIG_FB_MSM_HDMI_MHL
 static int hdmi_enable_5v(int on);
-static int hdmi_core_power(int on, int show);
-extern void hdmi_hpd_feature(int enable);
+extern void hdmi_hpd_feature(int on);
 #endif
 
 #define TFA9887_I2C_SLAVE_ADDR	(0x68 >> 1)
@@ -3926,7 +3926,6 @@ static struct resource hdmi_msm_resources[] = {
 	},
 };
 
-static int hdmi_enable_5v(int on);
 static int hdmi_core_power(int on, int show);
 /*static int hdmi_cec_power(int on);*/
 
