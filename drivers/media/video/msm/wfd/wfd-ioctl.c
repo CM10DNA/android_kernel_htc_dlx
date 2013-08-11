@@ -100,10 +100,8 @@ struct wfd_vid_buffer {
 };
 
 static int wfd_vidbuf_queue_setup(struct vb2_queue *q,
-				   const struct v4l2_format *fmt,
-				   unsigned int *num_buffers,
-				   unsigned int *num_planes,
-				   unsigned int sizes[], void *alloc_ctxs[])
+		unsigned int *num_buffers, unsigned int *num_planes,
+		unsigned long sizes[], void *alloc_ctxs[])
 {
 	struct file *priv_data = (struct file *)(q->drv_priv);
 	struct wfd_inst *inst = (struct wfd_inst *)priv_data->private_data;
@@ -596,7 +594,7 @@ static int mdp_output_thread(void *data)
 	return rc;
 }
 
-int wfd_vidbuf_start_streaming(struct vb2_queue *q, unsigned int count)
+int wfd_vidbuf_start_streaming(struct vb2_queue *q)
 {
 	struct file *priv_data = (struct file *)(q->drv_priv);
 	struct wfd_device *wfd_dev =
