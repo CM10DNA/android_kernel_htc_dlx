@@ -580,9 +580,14 @@ static char Color_enhancement[33]= {
 //static char Outline_Sharpening_Control[3]= {
 //	0xDD, 0x11, 0xA1};
 
+/*
 static char BackLight_Control_6[8]= {
 	0xCE, 0x00, 0x07, 0x00,
 	0xC1, 0x24, 0xB2, 0x02};
+*/
+static char BackLight_Control_6_28kHz[8]= {
+       0xCE, 0x00, 0x01, 0x00,
+       0xC1, 0xF4, 0xB2, 0x02};
 static char Manufacture_Command_setting[4] = {0xD6, 0x01};
 static char nop[4] = {0x00, 0x00};
 static char CABC[2] = {0x55, 0x01};
@@ -598,7 +603,7 @@ static struct dsi_cmd_desc sharp_video_on_cmds[] = {
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(Manufacture_Command_setting), Manufacture_Command_setting},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(Color_enhancement), Color_enhancement},
 	//{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(Outline_Sharpening_Control), Outline_Sharpening_Control},
-	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(BackLight_Control_6), BackLight_Control_6},
+	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(BackLight_Control_6_28kHz), BackLight_Control_6_28kHz},
 	{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(write_control_display), write_control_display},
 	{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(CABC), CABC},
 	{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(TE_OUT), TE_OUT},
